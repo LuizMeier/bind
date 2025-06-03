@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  ns1:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: ns1
+    ports:
+      - "1053:53/udp"
+      - "1053:53/tcp"
+    volumes:
+      - ./ns1/etc/bind:/etc/bind
+      - ./ns1/var/cache/bind:/var/cache/bind
+      - ./ns1/var/log:/var/log
+    networks:
+      dns_net:
+        ipv4_address: 172.28.0.2
+
+  ns2:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: ns2
+    ports:
+      - "2053:53/udp"
+      - "2053:53/tcp"
+    volumes:
+      - ./ns2/etc/bind:/etc/bind
+      - ./ns2/var/cache/bind:/var/cache/bind
+      - ./ns2/var/log:/var/log
+    networks:
+      dns_net:
+        ipv4_address: 172.28.0.3
+
+networks:
+  dns_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
